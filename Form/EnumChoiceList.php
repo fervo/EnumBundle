@@ -1,13 +1,17 @@
 <?php
 
-namespace AppBundle\Form;
+namespace Fervo\EnumBundle\Form;
 
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 
 class EnumChoiceList extends ChoiceList
 {
-    public function __construct($enumClass)
+    protected $typeName;
+
+    public function __construct($enumClass, $typeName)
     {
+        $this->typeName = $typeName;
+
         $choices = [];
         foreach ($enumClass::toArray() as $constant => $value) {
             $choices[$value] = $enumClass::$constant();
@@ -49,7 +53,7 @@ class EnumChoiceList extends ChoiceList
         $labels = [];
 
         foreach ($choices as $i => $choice) {
-            $labels[$i] = sprintf('%s', $choice->getValue());
+            $labels[$i] = sprintf('enum.%s.%s', $this->typeName, $choice->getValue());
         }
 
         return $labels;

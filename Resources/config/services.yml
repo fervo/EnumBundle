@@ -7,7 +7,7 @@ services:
             - ~ # type name
 
     fervo_enum.form_guesser:
-        class: Fervo\EnumBundle\Form\TypeGuesser
+        class: Fervo\EnumBundle\Form\EnumTypeGuesser
         arguments:
             - @doctrine
             - %fervo_enum.doctrine_form_map%

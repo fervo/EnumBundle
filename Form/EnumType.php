@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form;
+namespace Fervo\EnumBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -22,7 +22,7 @@ class EnumType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'choice_list' => new EnumChoiceList($this->enumClass),
+            'choice_list' => new EnumChoiceList($this->enumClass, $this->name),
         ));
     }
 
