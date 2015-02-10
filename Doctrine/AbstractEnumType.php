@@ -14,19 +14,7 @@ abstract class AbstractEnumType extends Type
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $enumClass = $this->getEnumClass();
-        $typeName = $this->getName();
-
-        switch (true) {
-            case $platform instanceof SqlitePlatform:
-                return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
-            case $platform instanceof MySqlPlatform:
-                $values = $enumClass::toArray();
-                $values = array_map([$platform, 'quoteStringLiteral'], $values);
-                return 'ENUM('.implode(', ', $values).')';
-            default:
-                throw new Exception("No implementation of $typeName for current Doctrine platform");
-        }
+        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
