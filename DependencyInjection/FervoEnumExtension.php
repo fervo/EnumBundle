@@ -34,14 +34,17 @@ class FervoEnumExtension extends Extension
 
         $enumTypeClasses = [];
         $doctrineFormMap = [];
+        $enumMap = [];
         foreach ($config['enums'] as $className => $classConfig) {
             $enumTypeClasses[$classConfig['doctrine_type']] = ['commented' => true, 'class' => $this->writeTypeClassFile($className, $classConfig, $config['doctrine_type_namespace'], $config['doctrine_type_directory'])];
             $this->processClassConfig($className, $classConfig, $container);
             $doctrineFormMap[$classConfig['form_type']] = $classConfig['doctrine_type'];
+            $enumMap[$className] = $classConfig['form_type'];
         }
 
         $container->setParameter('fervo_enum.doctrine_type_classes', $enumTypeClasses);
         $container->setParameter('fervo_enum.doctrine_form_map', $doctrineFormMap);
+        $container->setParameter('fervo_enum.enum_map', $enumMap);
     }
 
     protected function writeTypeClassFile($className, $config, $doctrine_ns, $doctrine_dir)

@@ -13,3 +13,11 @@ services:
             - %fervo_enum.doctrine_form_map%
         tags:
             - { name: form.type_guesser }
+
+    fervo_enum.twig_extension:
+        class: Fervo\EnumBundle\Twig\EnumExtension
+        arguments:
+            - @translator
+            - %fervo_enum.enum_map%
+        tags:
+            - { name: twig.extension }

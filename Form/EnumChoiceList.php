@@ -53,7 +53,7 @@ class EnumChoiceList extends ChoiceList
         $labels = [];
 
         foreach ($choices as $i => $choice) {
-            $labels[$i] = sprintf('enum.%s.%s', $this->typeName, $choice->getValue());
+            $labels[$i] = sprintf('%s.%s', $this->typeName, $choice->getValue());
         }
 
         return $labels;
