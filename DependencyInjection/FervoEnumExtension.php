@@ -32,6 +32,8 @@ class FervoEnumExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
+        $enumHandlerDef = $container->getDefinition('fervo_enum.jms_serializer.enum_handler');
+
         $enumTypeClasses = [];
         $doctrineFormMap = [];
         $enumMap = [];
@@ -40,6 +42,8 @@ class FervoEnumExtension extends Extension
             $this->processClassConfig($className, $classConfig, $container);
             $doctrineFormMap[$classConfig['form_type']] = $classConfig['doctrine_type'];
             $enumMap[$className] = $classConfig['form_type'];
+
+            $enumHandlerDef->addTag('jms_serializer.handler', ['type' => $className, 'format' => 'json', 'method' => 'serializeEnumToJson']);
         }
 
         $container->setParameter('fervo_enum.doctrine_type_classes', $enumTypeClasses);

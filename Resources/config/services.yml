@@ -8,6 +8,7 @@ services:
 
     fervo_enum.form_guesser:
         class: Fervo\EnumBundle\Form\EnumTypeGuesser
+        public: false
         arguments:
             - @doctrine
             - %fervo_enum.doctrine_form_map%
@@ -16,8 +17,13 @@ services:
 
     fervo_enum.twig_extension:
         class: Fervo\EnumBundle\Twig\EnumExtension
+        public: false
         arguments:
             - @translator
             - %fervo_enum.enum_map%
         tags:
             - { name: twig.extension }
+
+    fervo_enum.jms_serializer.enum_handler:
+        class: Fervo\EnumBundle\JMSSerializer\EnumHandler
+        public: false
