@@ -1,0 +1,16 @@
+{
+    "name": "fervo/enum-bundle",
+    "description": "A library to integrate enums into the Symfony framework",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "autoload": {
+        "psr-4": { "Fervo\\EnumBundle\\": ""}
+    },
+    "require": {
+        "php": "~5.5",
+        "symfony/symfony": "~2.3",
+        "doctrine/doctrine-bundle": "~1.2",
+        "myclabs/php-enum": "~1.3",
+        "doctrine/common": "~2.4"
+    }
+}

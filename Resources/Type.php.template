@@ -1,0 +1,18 @@
+<?php
+
+namespace {{namespace}};
+
+use Fervo\EnumBundle\Doctrine\AbstractEnumType;
+
+class {{typeClassName}} extends AbstractEnumType
+{
+    public function getEnumClass()
+    {
+        return '{{typeClass}}';
+    }
+
+    public function getName()
+    {
+        return '{{typeName}}';
+    }
+}

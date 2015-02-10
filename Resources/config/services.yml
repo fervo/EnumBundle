@@ -1,0 +1,15 @@
+services:
+    fervo_enum.form_type.abstract:
+        class: Fervo\EnumBundle\Form\EnumType
+        abstract: true
+        arguments:
+            - ~ # enum class
+            - ~ # type name
+
+    fervo_enum.form_guesser:
+        class: Fervo\EnumBundle\Form\TypeGuesser
+        arguments:
+            - @doctrine
+            - %fervo_enum.doctrine_form_map%
+        tags:
+            - { name: form.type_guesser }
