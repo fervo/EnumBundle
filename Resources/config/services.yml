@@ -8,7 +8,7 @@ services:
 
     fervo_enum.form_guesser:
         class: Fervo\EnumBundle\Form\EnumTypeGuesser
-        public: false
+        public: true
         arguments:
             - @doctrine
             - %fervo_enum.doctrine_form_map%
