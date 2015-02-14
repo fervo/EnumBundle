@@ -10,12 +10,17 @@ class FervoEnumBundle extends Bundle
 {
     private $autoloader;
 
+    const GENERATED_NAMESPACE = 'Generated\Doctrine';
+    const GENERATED_DIR = '%kernel.cache_dir%/enumtypes/';
+
     /**
      * {@inheritDoc}
      */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
+
+        $this->registerAutoloader($container);
 
         $container->addCompilerPass(new DependencyInjection\Compiler\AddDoctrineTypes());
     }
@@ -25,12 +30,7 @@ class FervoEnumBundle extends Bundle
      */
     public function boot()
     {
-        if ($this->container->hasParameter('fervo_enum.doctrine_types.namespace')) {
-            $namespace = $this->container->getParameter('fervo_enum.doctrine_types.namespace');
-            $dir = $this->container->getParameter('fervo_enum.doctrine_types.dir');
-
-            $this->autoloader = Autoloader::register($dir, $namespace, null);
-        }
+        $this->registerAutoloader($this->container);
     }
 
     /**
@@ -44,4 +44,13 @@ class FervoEnumBundle extends Bundle
         }
     }
 
+    private function registerAutoloader($container)
+    {
+        if (!$this->autoloader) {
+            $cacheDir = $container->getParameter('kernel.cache_dir');
+            $generatedDir = str_replace('%kernel.cache_dir%', $cacheDir, self::GENERATED_DIR);
+
+            $this->autoloader = Autoloader::register($generatedDir, self::GENERATED_NAMESPACE, null);
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Fervo\EnumBundle\DependencyInjection;
 
+use Fervo\EnumBundle\FervoEnumBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -23,11 +24,8 @@ class FervoEnumExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $cache_dir = $container->getParameter('kernel.cache_dir');
-        $config['doctrine_type_directory'] = str_replace('%kernel.cache_dir%', $cache_dir, $config['doctrine_type_directory']);
-
-        $container->setParameter('fervo_enum.doctrine_types.namespace', $config['doctrine_type_namespace']);
-        $container->setParameter('fervo_enum.doctrine_types.dir', $config['doctrine_type_directory']);
+        $cacheDir = $container->getParameter('kernel.cache_dir');
+        $generatedDir = str_replace('%kernel.cache_dir%', $cacheDir, FervoEnumBundle::GENERATED_DIR);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
@@ -38,7 +36,7 @@ class FervoEnumExtension extends Extension
         $doctrineFormMap = [];
         $enumMap = [];
         foreach ($config['enums'] as $className => $classConfig) {
-            $enumTypeClasses[$classConfig['doctrine_type']] = ['commented' => true, 'class' => $this->writeTypeClassFile($className, $classConfig, $config['doctrine_type_namespace'], $config['doctrine_type_directory'])];
+            $enumTypeClasses[$classConfig['doctrine_type']] = ['commented' => true, 'class' => $this->writeTypeClassFile($className, $classConfig, FervoEnumBundle::GENERATED_NAMESPACE, $generatedDir)];
             $this->processClassConfig($className, $classConfig, $container);
             $doctrineFormMap[$classConfig['form_type']] = $classConfig['doctrine_type'];
             $enumMap[$className] = $classConfig['form_type'];
@@ -59,6 +57,7 @@ class FervoEnumExtension extends Extension
         if (!is_dir($doctrine_dir)) {
             mkdir($doctrine_dir, 0755, true);
         }
+
         file_put_contents($doctrine_dir.'/'.$typeClassName.'.php', $classFile);
 
         return $doctrine_ns.'\\'.$typeClassName;

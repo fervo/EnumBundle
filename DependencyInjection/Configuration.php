@@ -22,12 +22,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('doctrine_type_namespace')
-                    ->defaultValue('Generated\Doctrine')
-                ->end()
-                ->scalarNode('doctrine_type_directory')
-                    ->defaultValue('%kernel.cache_dir%/enumtypes/')
-                ->end()
                 ->arrayNode('enums')
                     ->useAttributeAsKey('class')
                     ->prototype('array')
