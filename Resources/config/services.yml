@@ -26,4 +26,4 @@ services:
 
     fervo_enum.jms_serializer.enum_handler:
         class: Fervo\EnumBundle\JMSSerializer\EnumHandler
-        public: false
+        public: true
