@@ -2,16 +2,18 @@
 
 namespace Fervo\EnumBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\ClassLoader\Psr4ClassLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Doctrine\Common\Proxy\Autoloader;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class FervoEnumBundle extends Bundle
 {
     private $autoloader;
 
-    const GENERATED_NAMESPACE = 'Generated\Doctrine';
-    const GENERATED_DIR = '%kernel.cache_dir%/enumtypes/';
+    const GENERATED_DIR = '%kernel.cache_dir%/fervoenumbundle/';
+    const VENDOR_NAMESPACE = 'FervoEnumBundle';
+    const DOCTRINE_NAMESPACE = 'Generated\Doctrine';
+    const FORM_NAMESPACE = 'Generated\Form';
 
     /**
      * {@inheritDoc}
@@ -23,6 +25,7 @@ class FervoEnumBundle extends Bundle
         $this->registerAutoloader($container);
 
         $container->addCompilerPass(new DependencyInjection\Compiler\AddDoctrineTypes());
+        $container->addCompilerPass(new DependencyInjection\Compiler\UnregisterFormGuesser());
     }
 
     /**
@@ -50,7 +53,9 @@ class FervoEnumBundle extends Bundle
             $cacheDir = $container->getParameter('kernel.cache_dir');
             $generatedDir = str_replace('%kernel.cache_dir%', $cacheDir, self::GENERATED_DIR);
 
-            $this->autoloader = Autoloader::register($generatedDir, self::GENERATED_NAMESPACE, null);
+            $loader = new Psr4ClassLoader();
+            $loader->addPrefix(self::VENDOR_NAMESPACE, $generatedDir);
+            $loader->register();
         }
     }
 }

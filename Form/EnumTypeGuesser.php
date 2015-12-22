@@ -17,12 +17,14 @@ use Doctrine\Common\Util\ClassUtils;
 class EnumTypeGuesser implements FormTypeGuesserInterface
 {
     protected $registry;
+    protected $doctrineFormMap;
 
     private $cache = array();
 
     public function __construct(ManagerRegistry $registry, array $doctrineFormMap)
     {
         $this->registry = $registry;
+        $this->doctrineFormMap = $doctrineFormMap;
     }
 
     public function guessType($class, $property)
@@ -35,8 +37,8 @@ class EnumTypeGuesser implements FormTypeGuesserInterface
 
         $doctrineType = $metadata->getTypeOfField($property);
 
-        if (isset($doctrineFormMap[$doctrineType])) {
-            return new TypeGuess($doctrineFormMap[$doctrineType], array(), Guess::HIGH_CONFIDENCE);
+        if (isset($this->doctrineFormMap[$doctrineType])) {
+            return new TypeGuess($this->doctrineFormMap[$doctrineType]['class'], array(), Guess::HIGH_CONFIDENCE);
         }
     }
 

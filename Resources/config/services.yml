@@ -1,17 +1,10 @@
 services:
-    fervo_enum.form_type.abstract:
-        class: Fervo\EnumBundle\Form\EnumType
-        abstract: true
-        arguments:
-            - ~ # enum class
-            - ~ # type name
-
     fervo_enum.form_guesser:
         class: Fervo\EnumBundle\Form\EnumTypeGuesser
         public: true
         arguments:
-            - @doctrine
-            - %fervo_enum.doctrine_form_map%
+            - "@doctrine"
+            - "%fervo_enum.form_type_classes%"
         tags:
             - { name: form.type_guesser }
 
@@ -19,8 +12,8 @@ services:
         class: Fervo\EnumBundle\Twig\EnumExtension
         public: false
         arguments:
-            - @translator
-            - %fervo_enum.enum_map%
+            - "@translator"
+            - "%fervo_enum.enum_map%"
         tags:
             - { name: twig.extension }
 
