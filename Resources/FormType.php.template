@@ -1,0 +1,19 @@
+<?php
+
+namespace {{namespace}};
+
+use {{enumFQCN}};
+use Fervo\EnumBundle\Form\AbstractEnumType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class {{typeClassName}} extends AbstractEnumType
+{
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'choices' => {{choices}}
+        ]);
+    }
+}

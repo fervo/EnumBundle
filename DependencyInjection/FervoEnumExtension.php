@@ -33,11 +33,12 @@ class FervoEnumExtension extends Extension
         $enumHandlerDef = $container->getDefinition('fervo_enum.jms_serializer.enum_handler');
 
         $enumTypeClasses = [];
+        $formTypeClasses = [];
         $doctrineFormMap = [];
         $enumMap = [];
         foreach ($config['enums'] as $className => $classConfig) {
-            $enumTypeClasses[$classConfig['doctrine_type']] = ['commented' => true, 'class' => $this->writeTypeClassFile($className, $classConfig, FervoEnumBundle::GENERATED_NAMESPACE, $generatedDir)];
-            $this->processClassConfig($className, $classConfig, $container);
+            $enumTypeClasses[$classConfig['doctrine_type']] = ['commented' => true, 'class' => $this->writeTypeClassFile($className, $classConfig, FervoEnumBundle::VENDOR_NAMESPACE, FervoEnumBundle::DOCTRINE_NAMESPACE, $generatedDir)];
+            $formTypeClasses[$classConfig['form_type']] = ['class' => $this->writeFormTypeClassFile($className, $classConfig, FervoEnumBundle::VENDOR_NAMESPACE, FervoEnumBundle::FORM_NAMESPACE, $generatedDir)];
             $doctrineFormMap[$classConfig['form_type']] = $classConfig['doctrine_type'];
             $enumMap[$className] = $classConfig['form_type'];
 
@@ -45,42 +46,78 @@ class FervoEnumExtension extends Extension
         }
 
         $container->setParameter('fervo_enum.doctrine_type_classes', $enumTypeClasses);
+        $container->setParameter('fervo_enum.form_type_classes', $formTypeClasses);
         $container->setParameter('fervo_enum.doctrine_form_map', $doctrineFormMap);
         $container->setParameter('fervo_enum.enum_map', $enumMap);
     }
 
-    protected function writeTypeClassFile($className, $config, $doctrine_ns, $doctrine_dir)
+    protected function writeTypeClassFile($className, $config, $vendorNamespace, $subNamespace, $dir)
     {
+        $namespace = sprintf('%s\\%s', $vendorNamespace, $subNamespace);
         $typeClassName = 'Generated'.ucfirst($config['doctrine_type']).'Type';
-        $classFile = $this->createTypeClass($className, $typeClassName, $config['doctrine_type'], $doctrine_ns);
+        $classFile = $this->createTypeClass($className, $typeClassName, $config['doctrine_type'], $namespace);
 
-        if (!is_dir($doctrine_dir)) {
-            mkdir($doctrine_dir, 0755, true);
+        $doctrineDir = $dir.str_replace('\\','/',$subNamespace);
+        if (!is_dir($doctrineDir)) {
+            mkdir($doctrineDir, 0755, true);
         }
 
-        file_put_contents($doctrine_dir.'/'.$typeClassName.'.php', $classFile);
+        file_put_contents($doctrineDir.'/'.$typeClassName.'.php', $classFile);
 
-        return $doctrine_ns.'\\'.$typeClassName;
+        return $namespace.'\\'.$typeClassName;
     }
 
-    protected function processClassConfig($className, $config, ContainerBuilder $container)
+    protected function createTypeClass($className, $typeClassName, $typeName, $namespace)
     {
-        $typeDef = new DefinitionDecorator('fervo_enum.form_type.abstract');
-        $typeDef->replaceArgument(0, $className);
-        $typeDef->replaceArgument(1, $config['form_type']);
-        $typeDef->addTag('form.type', ['alias' => $config['form_type']]);
-
-        $container->setDefinition(sprintf('fervo_enum.form_type.%s', $config['form_type']), $typeDef);
-    }
-
-    protected function createTypeClass($className, $typeClassName, $typeName, $doctrine_ns)
-    {
-        $template = file_get_contents(__DIR__.'/../Resources/Type.php.template');
+        $template = file_get_contents(__DIR__.'/../Resources/DoctrineType.php.template');
         $typeClass = strtr($template, [
-            '{{namespace}}' => $doctrine_ns,
+            '{{namespace}}' => $namespace,
             '{{typeClassName}}' => $typeClassName,
             '{{typeClass}}' => $className,
             '{{typeName}}' => $typeName,
+        ]);
+
+        return $typeClass;
+    }
+
+    protected function writeFormTypeClassFile($enumFQCN, $config, $vendorNamespace, $subNamespace, $dir)
+    {
+        $namespace = sprintf('%s\\%s', $vendorNamespace, $subNamespace);
+        $enumClass = substr($enumFQCN, strrpos($enumFQCN, '\\') +1);
+
+        $phpArray = [];
+        foreach ($enumFQCN::toArray() as $constant => $value) {
+            $label = sprintf('%s.%s', $config['form_type'], (string) $value);
+            $value = sprintf('%s::%s()', $enumClass, $constant);
+            $phpArray[$label] = $value;
+        }
+        $stringArray = json_encode($phpArray);
+        $stringArray = preg_replace('/":"/', '"=>"', $stringArray);
+        $stringArray = preg_replace('/"(\w+::[^"]+)"/', '$1', $stringArray);
+        $stringArray = '['.substr($stringArray, 1, -1).']';
+
+        $typeClassName = $enumClass.'Type';
+
+        $classFile = $this->createFormTypeClass($typeClassName, $namespace, $stringArray, $enumFQCN);
+
+        $formDir = $dir.str_replace('\\','/',$subNamespace);
+        if (!is_dir($formDir)) {
+            mkdir($formDir, 0755, true);
+        }
+
+        file_put_contents($formDir.'/'.$typeClassName.'.php', $classFile);
+
+        return $namespace.'\\'.$typeClassName;
+    }
+
+    protected function createFormTypeClass($typeClassName, $namespace, $choices, $enumFQCN)
+    {
+        $template = file_get_contents(__DIR__.'/../Resources/FormType.php.template');
+        $typeClass = strtr($template, [
+            '{{namespace}}' => $namespace,
+            '{{enumFQCN}}' => $enumFQCN,
+            '{{typeClassName}}' => $typeClassName,
+            '{{choices}}' => $choices,
         ]);
 
         return $typeClass;

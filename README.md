@@ -1,55 +1,181 @@
-# EnumBundle
+# Enum Bundle
 
-## Getting started (a rough outline)
+Provides a [MyCLabs\Enum][myclabs-enum-homepage] integration with Doctrine for your Symfony projects.
 
-* Add the bundle as a dependency
-* Add the bundle to your kernel
-* Add the bundle config
+## Installation
 
-## Bundle config example
+### Step 1: Download the Bundle
 
-```yaml
-fervo_enum:
-    enums:
-        EnumExample\Action:
-            doctrine_type: action # Type name used in doctrine annotations
-            form_type: action # Type name used in Symfony Forms
-```
+    $ composer require fervo/enum-bundle "^2.0"
 
-## Enum class example
+### Step 2: Enable the Bundle
 
-```php
-namespace EnumExample;
+    <?php
 
-use MyCLabs\Enum\Enum;
+    // app/AppKernel.php
 
-class Action extends Enum
-{
-    const VIEW = 'view';
-    const EDIT = 'edit';
-}
-```
+    // ...
+    class AppKernel extends Kernel
+    {
+        public function registerBundles()
+        {
+            $bundles = array(
+                // ...
 
-## Using Doctrine Types
+                new Fervo\EnumBundle\FervoEnumBundle(),
+            );
 
-```php
-class Entity
-{
+            // ...
+        }
+
+        // ...
+    }
+
+### Step 3: Configure your enum
+
+    fervo_enum:
+        enums:
+            AppBundle\Enum\Gender:
+                doctrine_type: gender # Type name used in doctrine annotations
+                form_type: gender # Used in translation keys
+
+### Step 4: Create your enum
+
+    <?php
+
+    namespace AppBundle\Enum\Gender;
+
+    use MyCLabs\Enum\Enum;
+
+    class Gender extends Enum
+    {
+        const MALE = 'male';
+        const FEMALE = 'female';
+    }
+
+### Step 5: Use the enum in a doctrine entity
+
+    <?php
+
+    namespace AppBundle\Entity;
+
+    use AppBundle\Enum\Gender;
+    use Doctrine\ORM\Mapping as ORM;
+
     /**
-     * @ORM\Type('action')
+     * @ORM\Entity()
      */
-    protected $action;
-}
-```
+    class Person
+    {
+        // ...
 
-## Using JMSSerializer
+        /**
+         * @ORM\Column(type="gender")
+         */
+        protected $gender;
 
-```php
-class Entity
-{
-    /**
-     * @JMSSerializer\Type('EnumExample\Action')
-     */
-    protected $action;
-}
-```
+        // ...
+
+        public function getGender()
+        {
+            return $this->gender;
+        }
+
+        public function setGender(Gender $gender)
+        {
+            $this->gender = $gender;
+        }
+
+        // ...
+    }
+
+### Step 6: Use the enum in [Symfony forms][symfony-forms-homepage]
+
+The bundle auto-generates a corresponding form type for each configured enum. The FQCN for the form type is on the format `FervoEnumBundle\Generated\Form\{{enum class name}}Type`. So with the enum class in the example above, it could be used in a form type in the following way.
+
+    <?php
+
+    namespace AppBundle\Form\Type;
+
+    use FervoEnumBundle\Generated\Form\GenderType;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\FormBuilderInterface;
+
+    class EmployeeType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
+            	// ...
+                ->add('gender', GenderType::class)
+                // ...
+            ;
+        }
+    }
+
+If the underlying object of the form type is a doctrine mapped entity, the type can also be guessed by the framework. But it is a good practice to always specify the FQCN in form types.
+
+### Step 7: Specify translations for the enum values
+
+The form type looks by default for the translation of the enum values in the `enums` translation domain. The translation keys are on the format `{{configured form_type name}}.{{enum constant value}}`. So going with the example the translation keys would be `gender.male` and `gender.female`.
+
+## Additional functionality
+
+### Use the enum with [Symfony @ParamConverter][symfony-paramconver-homepage]
+
+    <?php
+
+    namespace AppBundle\Controller;
+
+    use AppBundle\Enum\Gender;
+    use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+    use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+    class EmployeeController extends Controller
+    {
+        /**
+         * @ParamConverter("gender")
+         */
+        public function indexAction(Gender $gender)
+        {
+            // ...
+        }
+    }
+
+### Use the enum with [JMS\Serializer][jms-serializer-homepage]
+
+    <?php
+
+    namespace AppBundle\Entity;
+
+    use AppBundle\Enum\Gender;
+    use JMS\Serializer\Annotation as JMS;
+
+    class Person
+    {
+        // ...
+
+        /**
+         * @JMS\Type("gender")
+         */
+        protected $gender;
+
+        // ...
+
+        public function getGender()
+        {
+            return $this->gender;
+        }
+
+        public function setGender(Gender $gender)
+        {
+            $this->gender = $gender;
+        }
+
+        // ...
+    }
+
+[myclabs-enum-homepage]: https://github.com/myclabs/php-enum
+[jms-serializer-homepage]: http://jmsyst.com/libs/serializer
+[symfony-forms-homepage]: http://symfony.com/doc/current/book/forms.html
+[symfony-paramconver-homepage]: http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
