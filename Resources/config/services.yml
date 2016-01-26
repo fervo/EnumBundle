@@ -27,3 +27,8 @@ services:
     fervo_enum.jms_serializer.enum_handler:
         class: Fervo\EnumBundle\JMSSerializer\EnumHandler
         public: true
+
+    fervo_enum.param_converter:
+        class: Fervo\EnumBundle\ParamConverter\EnumParamConverter
+        tags:
+            - { name: request.param_converter, converter: enum }
