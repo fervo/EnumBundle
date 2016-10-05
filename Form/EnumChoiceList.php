@@ -58,4 +58,9 @@ class EnumChoiceList extends ChoiceList
 
         return $labels;
     }
+
+    protected function createValue($choice)
+    {
+        return $choice->getValue();
+    }
 }
