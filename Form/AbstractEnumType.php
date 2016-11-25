@@ -14,7 +14,11 @@ abstract class AbstractEnumType extends AbstractType
         $resolver->setDefaults([
             'choices_as_values' => true,
             'translation_domain' => 'enums',
-            'choice_value' => function(Enum $enum) {
+            'choice_value' => function($enum) {
+                if ($enum === null) {
+                    return null;
+                }
+                
                 return $enum->getValue();
             },
         ]);
