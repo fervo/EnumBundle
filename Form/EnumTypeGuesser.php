@@ -21,7 +21,7 @@ class EnumTypeGuesser implements FormTypeGuesserInterface
 
     private $cache = array();
 
-    public function __construct(ManagerRegistry $registry, array $doctrineFormMap)
+    public function __construct(ManagerRegistry $registry = null, array $doctrineFormMap)
     {
         $this->registry = $registry;
         $this->doctrineFormMap = $doctrineFormMap;
@@ -29,6 +29,10 @@ class EnumTypeGuesser implements FormTypeGuesserInterface
 
     public function guessType($class, $property)
     {
+        if (!$this->registry) {
+            return;
+        }
+
         if (!$ret = $this->getMetadata($class)) {
             return;
         }

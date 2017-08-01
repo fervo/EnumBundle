@@ -25,7 +25,6 @@ class FervoEnumBundle extends Bundle
         $this->registerAutoloader($container);
 
         $container->addCompilerPass(new DependencyInjection\Compiler\AddDoctrineTypes());
-        $container->addCompilerPass(new DependencyInjection\Compiler\UnregisterFormGuesser());
     }
 
     /**

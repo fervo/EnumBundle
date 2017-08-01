@@ -3,7 +3,7 @@ services:
         class: Fervo\EnumBundle\Form\EnumTypeGuesser
         public: true
         arguments:
-            - "@doctrine"
+            - "@?doctrine"
             - "%fervo_enum.form_type_classes%"
         tags:
             - { name: form.type_guesser }
