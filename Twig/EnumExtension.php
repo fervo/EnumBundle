@@ -5,9 +5,6 @@ namespace Fervo\EnumBundle\Twig;
 use MyCLabs\Enum\Enum;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
-* 
-*/
 class EnumExtension extends \Twig_Extension
 {
     protected $translator;

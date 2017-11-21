@@ -2,7 +2,6 @@
 
 namespace Fervo\EnumBundle\Form;
 
-use MyCLabs\Enum\Enum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
