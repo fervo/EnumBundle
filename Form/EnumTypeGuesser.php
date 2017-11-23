@@ -3,7 +3,6 @@
 namespace Fervo\EnumBundle\Form;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\Mapping\MappingException as LegacyMappingException;
 use Symfony\Component\Form\FormTypeGuesserInterface;
@@ -11,9 +10,6 @@ use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
 use Doctrine\Common\Util\ClassUtils;
 
-/**
-*
-*/
 class EnumTypeGuesser implements FormTypeGuesserInterface
 {
     protected $registry;

@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use MyCLabs\Enum\Enum;
 
-/**
-* 
-*/
 class EnumParamConverter implements ParamConverterInterface
 {
     /**

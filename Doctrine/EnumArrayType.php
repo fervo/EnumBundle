@@ -2,10 +2,7 @@
 
 namespace Fervo\EnumBundle\Doctrine;
 
-use AppBundle\Enum\CommentStatus;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Types\Type;
 
 class EnumArrayType extends Type
