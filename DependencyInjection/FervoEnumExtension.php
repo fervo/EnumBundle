@@ -56,7 +56,7 @@ class FervoEnumExtension extends Extension
         $typeClassName = 'Generated'.ucfirst($config['doctrine_type']).'Type';
         $classFile = $this->createTypeClass($className, $typeClassName, $config['doctrine_type'], $namespace);
 
-        $doctrineDir = $dir.str_replace('\\','/',$subNamespace);
+        $doctrineDir = $dir.'/'.str_replace('\\', '/', $subNamespace);
         if (!is_dir($doctrineDir)) {
             mkdir($doctrineDir, 0755, true);
         }
@@ -99,7 +99,7 @@ class FervoEnumExtension extends Extension
 
         $classFile = $this->createFormTypeClass($typeClassName, $namespace, $stringArray, $enumFQCN);
 
-        $formDir = $dir.str_replace('\\','/',$subNamespace);
+        $formDir = $dir.'/'.str_replace('\\', '/', $subNamespace);
         if (!is_dir($formDir)) {
             mkdir($formDir, 0755, true);
         }
