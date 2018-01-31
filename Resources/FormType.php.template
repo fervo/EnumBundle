@@ -2,18 +2,22 @@
 
 namespace {{namespace}};
 
-use {{enumFQCN}};
-use Fervo\EnumBundle\Form\AbstractEnumType;
+use Fervo\EnumBundle\Form\EnumType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class {{typeClassName}} extends AbstractEnumType
+class {{typeClassName}} extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
         $resolver->setDefaults([
-            'choices' => {{choices}}
+            'class' => '{{enumFQCN}}',
+            'choice_label_prefix' => '{{choiceLabelPrefix}}',
         ]);
+    }
+
+    public function getParent()
+    {
+        return EnumType::class;
     }
 }

@@ -83,21 +83,9 @@ class FervoEnumExtension extends Extension
     {
         $namespace = sprintf('%s\\%s', $vendorNamespace, $subNamespace);
         $enumClass = substr($enumFQCN, strrpos($enumFQCN, '\\') +1);
-
-        $phpArray = [];
-        foreach ($enumFQCN::toArray() as $constant => $value) {
-            $label = sprintf('%s.%s', $config['form_type'], (string) $value);
-            $value = sprintf('%s::%s()', $enumClass, $constant);
-            $phpArray[$label] = $value;
-        }
-        $stringArray = json_encode($phpArray);
-        $stringArray = preg_replace('/":"/', '"=>"', $stringArray);
-        $stringArray = preg_replace('/"(\w+::[^"]+)"/', '$1', $stringArray);
-        $stringArray = '['.substr($stringArray, 1, -1).']';
-
         $typeClassName = $enumClass.'Type';
 
-        $classFile = $this->createFormTypeClass($typeClassName, $namespace, $stringArray, $enumFQCN);
+        $classFile = $this->createFormTypeClass($typeClassName, $namespace, $config['form_type'], $enumFQCN);
 
         $formDir = $dir.'/'.str_replace('\\', '/', $subNamespace);
         if (!is_dir($formDir)) {
@@ -109,14 +97,14 @@ class FervoEnumExtension extends Extension
         return $namespace.'\\'.$typeClassName;
     }
 
-    protected function createFormTypeClass($typeClassName, $namespace, $choices, $enumFQCN)
+    protected function createFormTypeClass($typeClassName, $namespace, $choiceLabelPrefix, $enumFQCN)
     {
         $template = file_get_contents(__DIR__.'/../Resources/FormType.php.template');
         $typeClass = strtr($template, [
             '{{namespace}}' => $namespace,
             '{{enumFQCN}}' => $enumFQCN,
             '{{typeClassName}}' => $typeClassName,
-            '{{choices}}' => $choices,
+            '{{choiceLabelPrefix}}' => $choiceLabelPrefix,
         ]);
 
         return $typeClass;
