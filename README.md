@@ -115,6 +115,31 @@ The bundle auto-generates a corresponding form type for each configured enum. Th
 
 If the underlying object of the form type is a doctrine mapped entity, the type can also be guessed by the framework. But it is a good practice to always specify the FQCN in form types.
 
+Or you can use `EnumType` with configured options:
+
+    <?php
+
+    namespace AppBundle\Form\Type;
+
+    use AppBundle\Enum\Gender;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\FormBuilderInterface;
+
+    class EmployeeType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
+            	// ...
+                ->add('gender', EnumType::class, [
+                    'class' => Gender::class,
+                    'choice_label_prefix' => 'gender', // optional
+                ])
+                // ...
+            ;
+        }
+    }
+
 ### Step 7: Specify translations for the enum values
 
 The form type looks by default for the translation of the enum values in the `enums` translation domain. The translation keys are on the format `{{configured form_type name}}.{{enum constant value}}`. So going with the example the translation keys would be `gender.male` and `gender.female`.
