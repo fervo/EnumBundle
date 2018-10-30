@@ -14,7 +14,7 @@ class EnumHandler
     {
         if ($context->getDirection() == GraphNavigator::DIRECTION_SERIALIZATION) {
             if (!$data instanceof Enum) {
-                throw new \UnexpectedValueException(sprintf('%s is not a valid enum', $value));
+                throw new \UnexpectedValueException(sprintf('%s is not a valid enum', $data));
             }
 
             return $data->getValue();
@@ -31,7 +31,7 @@ class EnumHandler
                 }
             }
 
-            throw new \UnexpectedValueException(sprintf('%s is not a valid %s value', $value, $enumClass));
+            throw new \UnexpectedValueException(sprintf('%s is not a valid %s value', $data, $enumClass));
         }
 
         throw new \UnexpectedValueException("Invalid direction");
