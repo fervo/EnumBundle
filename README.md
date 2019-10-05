@@ -200,6 +200,27 @@ The form type looks by default for the translation of the enum values in the `en
         // ...
     }
 
+### Customize value casting
+
+In case the values of your enumeration are not strings, you can use the two magic function `castValueIn` and `castValueOut` to support non-string values:
+
+```php
+<?php
+
+namespace App\Enum;
+
+use MyCLabs\Enum\Enum;
+
+class Status extends Enum {
+    public const SUCCESS = 1;
+    public const ERROR = 2;
+    
+    public static function castValueIn($value) {
+        return (int) $value;
+    }
+}
+```
+
 [myclabs-enum-homepage]: https://github.com/myclabs/php-enum
 [jms-serializer-homepage]: http://jmsyst.com/libs/serializer
 [symfony-forms-homepage]: http://symfony.com/doc/current/book/forms.html
