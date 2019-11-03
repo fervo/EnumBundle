@@ -36,6 +36,6 @@ abstract class AbstractEnumType extends Type
     
     public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
     {
-        return true;
+        return false;
     }
 }
