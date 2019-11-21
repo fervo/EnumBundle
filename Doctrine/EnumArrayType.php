@@ -56,4 +56,8 @@ class EnumArrayType extends Type
     {
         return 'enumarray';
     }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform) {
+        return true;
+    }
 }
