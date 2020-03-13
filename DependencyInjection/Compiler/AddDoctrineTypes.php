@@ -19,7 +19,7 @@ class AddDoctrineTypes implements CompilerPassInterface
         $types = $container->getParameter('doctrine.dbal.connection_factory.types');
         $enumTypes = $container->getParameter('fervo_enum.doctrine_type_classes');
         $arrayType = ['enumarray' => [
-            'commented' => true,
+            'commented' => false,
             'class' => 'Fervo\EnumBundle\Doctrine\EnumArrayType',
         ]];
 

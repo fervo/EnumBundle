@@ -33,8 +33,9 @@ abstract class AbstractEnumType extends Type
 
         return $value->getValue();
     }
-
-    public function requiresSQLCommentHint(AbstractPlatform $platform) {
+    
+    public function requiresSQLCommentHint(AbstractPlatform $platform) : bool
+    {
         return true;
     }
 }

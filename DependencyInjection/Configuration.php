@@ -26,7 +26,6 @@ class Configuration implements ConfigurationInterface
             $rootNode = $treeBuilder->root('fervo_enum');
         }
 
-
         $rootNode
             ->children()
                 ->arrayNode('enums')
