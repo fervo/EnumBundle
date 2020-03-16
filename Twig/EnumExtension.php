@@ -4,8 +4,11 @@ namespace Fervo\EnumBundle\Twig;
 
 use MyCLabs\Enum\Enum;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+use Twig\TwigTest;
 
-class EnumExtension extends \Twig_Extension
+class EnumExtension extends AbstractExtension
 {
     protected $translator;
     protected $enumMap;
@@ -24,14 +27,14 @@ class EnumExtension extends \Twig_Extension
     public function getTests()
     {
         return [
-            new \Twig_SimpleTest('enum', [$this, 'isEnum']),
+            new TwigTest('enum', [$this, 'isEnum']),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('enum_trans', [$this, 'getEnumTranslation']),
+            new TwigFunction('enum_trans', [$this, 'getEnumTranslation']),
         ];
     }
 
