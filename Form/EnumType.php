@@ -16,7 +16,7 @@ class EnumType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'enums',
+            'choice_translation_domain' => 'enums',
             'choice_value' => function (Enum $enum = null) {
                 if ($enum === null) {
                     return null;
