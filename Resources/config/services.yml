@@ -25,3 +25,12 @@ services:
         class: Fervo\EnumBundle\ParamConverter\EnumParamConverter
         tags:
             - { name: request.param_converter, converter: enum }
+
+    fervo_enum.enum_type:
+        class: Fervo\EnumBundle\Form\EnumType
+        arguments:
+          - "%fervo_enum.enum_map%"
+          - "%fervo_enum.fqcn_choice_label_prefix%"
+        tags:
+            - { name: form.type }
+

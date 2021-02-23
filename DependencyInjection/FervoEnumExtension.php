@@ -44,10 +44,15 @@ class FervoEnumExtension extends Extension
             $enumHandlerDef->addTag('jms_serializer.handler', ['type' => $className, 'format' => 'json', 'method' => 'serializeEnumToJson']);
         }
 
+        if ($config['fqcn_choice_label_prefix']) {
+            @trigger_error('Using the default value (true) for fqcn_choice_label_prefix is deprecated. Please change it to false and check that your translations in choice types are still correct.', E_USER_DEPRECATED);
+        }
+
         $container->setParameter('fervo_enum.doctrine_type_classes', $enumTypeClasses);
         $container->setParameter('fervo_enum.form_type_classes', $formTypeClasses);
         $container->setParameter('fervo_enum.doctrine_form_map', $doctrineFormMap);
         $container->setParameter('fervo_enum.enum_map', $enumMap);
+        $container->setParameter('fervo_enum.fqcn_choice_label_prefix', $config['fqcn_choice_label_prefix']);
     }
 
     protected function writeTypeClassFile($className, $config, $vendorNamespace, $subNamespace, $dir)
