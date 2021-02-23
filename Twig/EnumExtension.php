@@ -3,8 +3,9 @@
 namespace Fervo\EnumBundle\Twig;
 
 use MyCLabs\Enum\Enum;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Twig\TwigFunction;
 use Twig\TwigTest;
 
@@ -13,8 +14,15 @@ class EnumExtension extends AbstractExtension
     protected $translator;
     protected $enumMap;
 
-    public function __construct(TranslatorInterface $translator, array $enumMap)
+    /**
+     * @param $translator TranslatorInterface|LegacyTranslatorInterface
+     */
+    public function __construct($translator, array $enumMap)
     {
+        if (!$translator instanceof TranslatorInterface && !$translator instanceof LegacyTranslatorInterface) {
+            throw new \LogicException('A translator interface is expected as first argument');
+        }
+
         $this->translator = $translator;
         $this->enumMap = $enumMap;
     }
