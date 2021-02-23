@@ -34,6 +34,7 @@ Provides a [MyCLabs\Enum][myclabs-enum-homepage] integration with Doctrine for y
 ### Step 3: Configure your enum
 
     fervo_enum:
+        fqcn_choice_label_prefix: true  # For Backward compatibily, should be explicitely set to true
         enums:
             AppBundle\Enum\Gender:
                 doctrine_type: gender # Type name used in doctrine annotations

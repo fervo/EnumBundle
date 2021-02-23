@@ -28,6 +28,9 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->booleanNode('fqcn_choice_label_prefix')
+                    ->defaultTrue()
+                ->end()
                 ->arrayNode('enums')
                     ->useAttributeAsKey('class')
                     ->prototype('array')

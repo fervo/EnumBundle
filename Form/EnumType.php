@@ -13,6 +13,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EnumType extends AbstractType
 {
+    private $enumMap;
+    private $fqcnChoicePrefix;
+
+    public function __construct(array $enumMap, bool $fqcnChoicePrefix)
+    {
+        $this->enumMap = $enumMap;
+        $this->fqcnChoicePrefix = $fqcnChoicePrefix;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -30,7 +39,16 @@ class EnumType extends AbstractType
                 };
             },
             'choice_label_prefix' => function (Options $options) {
-                return StringUtil::fqcnToBlockPrefix($options['class']);
+                // BC compatibility layer, to be removed in 3.0
+                if ($this->fqcnChoicePrefix) {
+                    return StringUtil::fqcnToBlockPrefix($options['class']);
+                }
+
+                if (!isset($this->enumMap[$options['class']])) {
+                    throw new \LogicException(sprintf('No prefix found for class %s', $options['class']));
+                }
+
+                return $this->enumMap[$options['class']];
             },
         ]);
         $resolver->setRequired(['class']);
