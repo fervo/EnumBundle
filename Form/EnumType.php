@@ -65,11 +65,7 @@ class EnumType extends AbstractType
         } else {
             $resolver->setDefault('choice_loader', function (Options $options) {
                 return new CallbackChoiceLoader(function () use ($options) {
-                    if (PHP_VERSION_ID < 70000) {
-                        return $options['class']::values();
-                    } else {
-                        return $options['class']::values();
-                    }
+                    return $options['class']::values();
                 });
             });
         }
