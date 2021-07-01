@@ -2,7 +2,7 @@
 
 namespace Fervo\EnumBundle\Form;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\Mapping\MappingException as LegacyMappingException;
 use Symfony\Component\Form\FormTypeGuesserInterface;
