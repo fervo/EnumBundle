@@ -2,13 +2,13 @@
 
 namespace Fervo\EnumBundle\Form;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Mapping\MappingException as LegacyMappingException;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\Mapping\MappingException;
 use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
-use Doctrine\Common\Util\ClassUtils;
 
 class EnumTypeGuesser implements FormTypeGuesserInterface
 {
