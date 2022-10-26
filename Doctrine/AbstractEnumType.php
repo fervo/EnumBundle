@@ -22,6 +22,13 @@ abstract class AbstractEnumType extends Type
 
         $enumClass = $this->getEnumClass();
 
+        // If the enumeration provides a casting method, apply it
+        if (method_exists($enumClass, 'castValueIn')) {
+            /** @var callable $castValueIn */
+            $castValueIn = [$enumClass, 'castValueIn'];
+            $value = $castValueIn($value);
+        }
+
         return new $enumClass($value);
     }
 
@@ -29,6 +36,15 @@ abstract class AbstractEnumType extends Type
     {
         if ($value == null) {
             return null;
+        }
+
+        $enumClass = $this->getEnumClass();
+
+        // If the enumeration provides a casting method, apply it
+        if (method_exists($enumClass, 'castValueOut')) {
+            /** @var callable $castValueOut */
+            $castValueOut = [$enumClass, 'castValueOut'];
+            return $castValueOut($value->getValue());
         }
 
         return $value->getValue();
