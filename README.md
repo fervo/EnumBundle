@@ -182,7 +182,7 @@ The form type looks by default for the translation of the enum values in the `en
         // ...
 
         /**
-         * @JMS\Type("gender")
+         * @JMS\Type("AppBundle\Enum\Gender")
          */
         protected $gender;
 
